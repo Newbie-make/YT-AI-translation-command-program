@@ -1,5 +1,19 @@
 # YT-AI-translation-command-program
-Guide to a YouTube AI Translator Bot
+Bot Features:
+
+    Translates messages from any language to English.
+
+    Translates messages from English to Brazilian Portuguese (default).
+
+    Can translate to other languages on command (e.g., !translate es hello).
+
+    Includes fun "joke" languages like Simlish, Morse Code, and more.
+
+    Has built-in safety filters to block slurs and harmful content.
+
+    Includes a rate limiter to prevent you from ever being charged for API usage. 
+    
+Guide to my YouTube AI Translator Bot
 
     Download streamer.bot https://streamer.bot/
 
