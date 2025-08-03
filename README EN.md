@@ -15,6 +15,8 @@ Bot Features:
     
 Guide to my YouTube AI Translator Bot
 
+    Download YTtranslationcommand.cs on this GitHub page
+    
     Download streamer.bot https://streamer.bot/
 
     In Streamer.bot, go to Platforms -> YouTube -> Accounts.
