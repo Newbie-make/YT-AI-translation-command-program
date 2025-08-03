@@ -290,8 +290,4 @@ Passo 5: Crie o Comando de Ajuda !languages
 
 Passo 6: Teste!
 
-Faça uma live no YouTube (uma transmissão "Não Listada" é perfeita para testes) e experimente seus novos comandos!
-
 Observação: Como esta é uma IA, é natural que ocorram erros e coisas estranhas de vez em quando.
-
-Note: As this is an AI there are bound to be mistakes and odd things of the sort at times.
