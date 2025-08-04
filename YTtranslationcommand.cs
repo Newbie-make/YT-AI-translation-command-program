@@ -23,6 +23,10 @@ public class CPHInline
     private const int MAX_REQUESTS_PER_MINUTE = 15;
     private const int MAX_REQUESTS_PER_DAY = 450;
     private const int YOUTUBE_CHAR_LIMIT = 200;
+    // This is the maximum number of characters a translated message can be before the bot
+    // refuses to post it. This prevents spam from languages like Morse or Binary.
+    // 1000 characters is about 5 full YouTube messages. Adjust as you see fit.
+    private const int MAX_TRANSLATION_LENGTH = 1000;
     // --- END OF USER CONFIGURATION ---
     public bool Execute()
     {
@@ -314,6 +318,7 @@ public class CPHInline
             {
                 var translatedSegments = new List<string>();
                 string targetLanguageName;
+
                 if (!string.IsNullOrEmpty(targetLanguageCode))
                 {
                     targetLanguageName = languageMap[targetLanguageCode];
@@ -330,38 +335,48 @@ public class CPHInline
                 {
                     string prompt = CreateTranslationPrompt(segment.TextForApi, targetLanguageName, segment.PronounPlaceholders, segment.ProperNouns, segment.Tone);
                     string translatedTextWithPlaceholders = PerformApiCall(client, url, prompt);
-                    // --- C# RELIABLE REPLACEMENT LOGIC ---
+                    
                     string finalTranslatedText = translatedTextWithPlaceholders;
                     if (languagePronounMap.ContainsKey(targetLanguageName))
                     {
                         var replacementRules = languagePronounMap[targetLanguageName];
                         foreach (var entry in segment.PronounPlaceholders)
                         {
-                            string placeholder = entry.Key; // e.g., "[P1]"
-                            string pronoun = entry.Value; // e.g., "she/her"
+                            string placeholder = entry.Key;
+                            string pronoun = entry.Value;
                             if (replacementRules.ContainsKey(pronoun))
                             {
                                 finalTranslatedText = finalTranslatedText.Replace(placeholder, replacementRules[pronoun]);
                             }
                             else
                             {
-                                finalTranslatedText = finalTranslatedText.Replace(placeholder, ""); // Default: remove if unknown
+                                finalTranslatedText = finalTranslatedText.Replace(placeholder, "");
                             }
                         }
                     }
                     else
                     {
-                        // Default behavior for languages not in the map: remove all placeholders
                         foreach (var entry in segment.PronounPlaceholders)
                         {
                             finalTranslatedText = finalTranslatedText.Replace(entry.Key, "");
                         }
                     }
-
                     translatedSegments.Add(Regex.Replace(finalTranslatedText, @"\s+", " ").Trim());
                 }
 
                 string finalMessage = $"Translation for {user} (to {targetLanguageName}): \"{string.Join(" ", translatedSegments)}\"";
+                
+                // --- NEW SPAM PROTECTION CHECK ---
+                // Before we send the message, we check its total length.
+                if (finalMessage.Length > MAX_TRANSLATION_LENGTH)
+                {
+                    // If the translation is too long, send a single warning message instead of spamming.
+                    SendYouTubeMessage($"Sorry @{user}, the translated message is too long to be posted in chat!");
+                    CPH.LogError($"Blocked translation to {targetLanguageName} from {user} due to excessive length ({finalMessage.Length} chars).");
+                    return false; // Stop the action.
+                }
+
+                // If the message is a safe length, send it.
                 SendLongYouTubeMessage(finalMessage);
             }
         }
