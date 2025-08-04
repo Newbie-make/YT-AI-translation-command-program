@@ -110,8 +110,6 @@ Step 3: Create the Main Translator Action
 
         At the bottom of the C# window, click Find Refs.
 
-        You should now have five files in your references list.
-
     Click the Compile button at the bottom. It MUST say "Compiled successfully!".
 
     Click OK.
@@ -290,8 +288,6 @@ Passo 3: Crie a Ação Principal do Tradutor
     Adicione as Referências:
 
         Na parte inferior da janela de C#, clique na Find Refs.
-
-        Agora você deve ter cinco arquivos na sua lista de referências.
 
     Clique no botão Compile na parte inferior. É OBRIGATÓRIO que apareça a mensagem "Compiled successfully!".
 
