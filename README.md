@@ -1,17 +1,23 @@
 # YT-AI-translation-command-program
 Bot Features:
 
-    Translates messages from any language to English.
+    Translates messages from other languages into English by default.
 
-    Translates messages from English to Brazilian Portuguese (default).
+    Translates messages from English into Brazilian Portuguese by default.
 
     Can translate to other languages on command (e.g., !translate es hello).
 
     Includes fun "joke" languages like Simlish, Morse Code, and more.
 
-    Has built-in safety filters to block slurs and harmful content.
+    Has a manual input filter for words you want to block.
 
     Includes a rate limiter to prevent you from ever being charged for API usage. 
+
+    Smartly handles gendered languages using optional %she/her% and *ProperNoun* markers.
+
+    Can handle multiple tones in a single sentence (e.g., &sarcastic& ... &serious& ...).
+
+    Automatically splits long messages that would otherwise fail to send.
     
 Guide to my YouTube AI Translator Bot
 
@@ -59,15 +65,32 @@ Step 2: Set Up Global Variables in Streamer.bot
 
         Click OK.
 
-    Add the Slur Filter Blocklist:
+    Add the Slur Filter Blocklist (If you don't want to block any words then skip this step entirely):
 
         Right-click, Add.
 
         Name: translateBlocklist
 
-        Value: Enter a comma-separated list of words to block (e.g., word1,word2,word3). You can find public lists on GitHub by searching "streamer blocklist".
+        Value: Enter a comma-separated list of words to block (e.g., word1,word2,word3). You can find public lists on GitHub by searching "streamer blocklist". 
+        Click OK.
 
-        Check the Persist box.
+    Add the Daily Counter:
+
+        Right-click, Add.
+
+        Name: geminiRequestCountDaily
+
+        Value: 0
+
+        Click OK.
+
+    Add the Rate Limit Tracker:
+
+        Right-click, Add.
+
+        Name: geminiRequestTimestamps
+
+        Value: 0
 
         Click OK.
 
@@ -81,15 +104,17 @@ Step 3: Create the Main Translator Action
 
     DELETE all the default code in the pop-up window.
 
-    PASTE IN the complete, commented C# code you have. (You may alter it however you want. There are comments that let you know what is sae to 
+    PASTE IN the complete, commented C# code you have. (You may alter it however you want. There are comments that let you know what is safe to change)
 
-    Add References (CRITICAL STEP):
+    Add References:
 
         At the bottom of the C# window, click the References tab.
 
         Right-click, Add Reference from File... -> select Newtonsoft.Json.dll.
 
         Right-click again, Add Reference from File... -> scroll down and select System.dll.
+
+        Right-click again, Add Reference from File... -> System.Text.RegularExpressions.dll.
 
         You should now have two files in your references list.
 
@@ -105,8 +130,6 @@ Step 4: Create the YouTube Commands
 
     Command: !translate. (You can start a new line and add as many or as little as you want)
 
-    Action: Choose your Translate Chat (Gemini YT) action from the dropdown.
-
     Location: Make sure this is set to Start of message.
 
     Check the YouTube Message box under sources and unclick Twitch Message checkbox.
@@ -119,26 +142,40 @@ Step 5: Create the !languages Helper Command
 
 (Optional but highly recommended)
 
-    Create the Action:
-
-        Go to the Actions tab, Add a new action. Name it List Supported Languages YT.
-
-        In Sub-Actions, add YouTube -> Send Message to Live Chat.
-
-        Paste the pre-formatted list of languages into the Message box.
-
-        Click OK.
-
     Create the Command:
 
-        Go back to Platforms -> YouTube -> Commands.
+        Go back to Commands.
 
         Add a new command named !languages.
 
-        Set its Action to your new List Supported Languages YT action.
+        Command: !translate. (You can start a new line and add as many or as little as you want)
+
+        Location: Make sure this is set to Start of message.
+
+        Check the YouTube Message box under sources and unclick Twitch Message checkbox.
 
         Click OK.
 
+    
+    Create the Action:
+
+        Go to the Actions tab, Add a new action. Name it Explain Languages or something like that.
+
+        In Sub-Actions, add Core -> C# -> Excute C# code.
+
+        Delete all code in the pop up window.
+
+        Paste the explainlanguages.cs code.
+
+        Click OK.
+
+        In Triggers, Core -> Commands -> Commands triggered.
+
+        In the dropdown choose the command you just created.
+
+        Click OK.
+
+    
 Step 6: Test It!
 
 Note: As this is an AI there are bound to be mistakes and odd things of the sort at times.
@@ -150,17 +187,23 @@ Note: As this is an AI there are bound to be mistakes and odd things of the sort
 
 Recursos do Bot:
 
-    Traduz mensagens de qualquer idioma para o inglês.
+    Traduz mensagens de outros idiomas para o inglês por padrão.
 
-    Traduz mensagens do inglês para o Português do Brasil (padrão).
+    Traduz mensagens do inglês para o Português do Brasil por padrão.
 
     Pode traduzir para outros idiomas com um comando (ex: !translate es hello).
 
     Inclui idiomas divertidos de "brincadeira", como Simlish, Código Morse e mais.
 
-    Possui filtros de segurança integrados para bloquear ofensas e conteúdo prejudicial.
+    Possui um filtro de entrada manual para palavras que você deseja bloquear.
 
     Inclui um limitador de uso para evitar que você seja cobrado pelo uso da API.
+
+    Lida inteligentemente com idiomas que usam gênero, usando marcadores opcionais %she/her% e *ProperNoun*.
+
+    Pode lidar com múltiplos tons em uma única frase (ex: &sarcástico& ... &sério& ...).
+
+    Divide automaticamente mensagens longas que, de outra forma, não seriam enviadas.
 
 Guia para o meu Bot Tradutor de IA do YouTube
 
@@ -208,7 +251,7 @@ Passo 2: Configure as Variáveis Globais no Streamer.bot
 
         Clique em OK.
 
-    Adicione a Blocklist (Lista de Bloqueio) do Filtro de Ofensas:
+    Adicione a Blocklist (Lista de Bloqueio) do Filtro de Ofensas (Se você não quiser bloquear nenhuma palavra, pule esta etapa inteiramente):
 
         Clique com o botão direito, Add.
 
@@ -216,7 +259,25 @@ Passo 2: Configure as Variáveis Globais no Streamer.bot
 
         Value: Insira uma lista de palavras separadas por vírgula para bloquear (ex: palavra1,palavra2,palavra3). Você pode encontrar listas públicas no GitHub pesquisando por "streamer blocklist".
 
-        Marque a caixa Persist.
+        Clique em OK.
+
+    Adicione o Contador Diário:
+
+        Clique com o botão direito, Add.
+
+        Name: geminiRequestCountDaily
+
+        Value: 0
+
+        Clique em OK.
+
+    Adicione o Rastreador de Limite de Uso:
+
+        Clique com o botão direito, Add.
+
+        Name: geminiRequestTimestamps
+
+        Value: 0
 
         Clique em OK.
 
@@ -232,7 +293,7 @@ Passo 3: Crie a Ação Principal do Tradutor
 
     COLE o código C# completo e comentado que você tem. (Você pode alterá-lo como quiser. Existem comentários que informam o que é seguro alterar).
 
-    Adicione as Referências (PASSO CRÍTICO):
+    Adicione as Referências:
 
         Na parte inferior da janela de C#, clique na aba References.
 
@@ -240,7 +301,9 @@ Passo 3: Crie a Ação Principal do Tradutor
 
         Clique com o botão direito novamente, Add Reference from File... -> role para baixo e selecione System.dll.
 
-        Agora você deve ter dois arquivos na sua lista de referências.
+        Clique com o botão direito novamente, Add Reference from File... -> selecione System.Text.RegularExpressions.dll.
+
+        Agora você deve ter três arquivos na sua lista de referências.
 
     Clique no botão Compile na parte inferior. É OBRIGATÓRIO que apareça a mensagem "Compiled successfully!".
 
@@ -254,8 +317,6 @@ Passo 4: Crie os Comandos do YouTube
 
     Command: !translate. (Você pode iniciar uma nova linha e adicionar quantos comandos quiser).
 
-    Action: Escolha sua ação Translate Chat (Gemini YT) na lista suspensa.
-
     Location: Verifique se está definido como Start of message.
 
     Marque a caixa YouTube Message em "sources" e desmarque a caixa Twitch Message.
@@ -268,23 +329,37 @@ Passo 5: Crie o Comando de Ajuda !languages
 
 (Opcional, mas altamente recomendado)
 
-    Crie a Ação:
-
-        Vá para a aba Actions, adicione uma nova ação. Nomeie como List Supported Languages YT.
-
-        Em Sub-Actions, adicione YouTube -> Send Message to Live Chat.
-
-        Cole a lista pré-formatada de idiomas na caixa Message.
-
-        Clique em OK.
-
     Crie o Comando:
 
-        Volte para Platforms -> YouTube -> Commands.
+        Volte para Commands.
 
         Adicione um novo comando chamado !languages.
 
-        Defina sua Action para a nova ação List Supported Languages YT.
+        Command: !languages. (Este comando é o que os usuários irão digitar).
+
+        Action: Selecione a ação que você vai criar no próximo passo (ex: Explain Languages).
+
+        Location: Verifique se está definido como Start of message.
+
+        Marque a caixa YouTube Message em "sources" e desmarque a caixa Twitch Message.
+
+        Clique em OK.
+
+    Crie a Ação:
+
+        Vá para a aba Actions, adicione uma nova ação. Nomeie como Explain Languages ou algo similar.
+
+        Em Sub-Actions, adicione Core -> C# -> Execute C# Code.
+
+        APAGUE todo o código na janela que aparecer.
+
+        COLE o código explainlanguages.cs.
+
+        Clique em OK.
+
+        Em Triggers (Gatilhos), adicione Core -> Commands -> Command Triggered.
+
+        Na lista suspensa, escolha o comando que você acabou de criar (!languages).
 
         Clique em OK.
 
