@@ -108,15 +108,9 @@ Step 3: Create the Main Translator Action
 
     Add References:
 
-        At the bottom of the C# window, click the References tab.
+        At the bottom of the C# window, click Find Refs.
 
-        Right-click, Add Reference from File... -> select Newtonsoft.Json.dll.
-
-        Right-click again, Add Reference from File... -> scroll down and select System.dll.
-
-        Right-click again, Add Reference from File... -> System.Text.RegularExpressions.dll.
-
-        You should now have two files in your references list.
+        You should now have five files in your references list.
 
     Click the Compile button at the bottom. It MUST say "Compiled successfully!".
 
@@ -295,15 +289,9 @@ Passo 3: Crie a Ação Principal do Tradutor
 
     Adicione as Referências:
 
-        Na parte inferior da janela de C#, clique na aba References.
+        Na parte inferior da janela de C#, clique na Find Refs.
 
-        Clique com o botão direito, Add Reference from File... -> selecione Newtonsoft.Json.dll.
-
-        Clique com o botão direito novamente, Add Reference from File... -> role para baixo e selecione System.dll.
-
-        Clique com o botão direito novamente, Add Reference from File... -> selecione System.Text.RegularExpressions.dll.
-
-        Agora você deve ter três arquivos na sua lista de referências.
+        Agora você deve ter cinco arquivos na sua lista de referências.
 
     Clique no botão Compile na parte inferior. É OBRIGATÓRIO que apareça a mensagem "Compiled successfully!".
 
