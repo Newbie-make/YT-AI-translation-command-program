@@ -1,4 +1,4 @@
-# YT-AI-translation-command-program
+# Translation Bot
 Bot Features:
 
     Translates messages from other languages into English by default.
@@ -18,10 +18,17 @@ Bot Features:
     Can handle multiple tones in a single sentence (e.g., &sarcastic& ... &serious& ...).
 
     Automatically splits long messages that would otherwise fail to send.
-    
-Guide to my YouTube AI Translator Bot
 
-    Download YTtranslationcommand.cs on this GitHub page
+    Fully Configurable: Almost all settings, languages, and bot responses are controlled by easy-to-edit .json files. 
+    No need to touch the C# code to make changes!
+
+    User Profiles: Viewers can set their own default language and bot personality using the !sl command.
+
+    Multi-Platform: Separate, optimized code is provided for both Twitch and YouTube.
+
+    Directs users to a comprehensive help guide via the !langhelp command.
+    
+Guide to Translation Bot:
     
     Download streamer.bot https://streamer.bot/
 
@@ -29,7 +36,10 @@ Guide to my YouTube AI Translator Bot
 
     Sign in with the Google Account that is the Owner or Moderator of your YouTube channel.
 
-    When Google asks for permissions, CHECK ALL THE BOXES. You must grant it permission to "manage your YouTube account" and send messages.
+    When Google asks for permissions, CHECK ALL THE BOXES. 
+    You must grant it permission to "manage your YouTube account" and send messages.
+
+    Do practically the same for Twitch if you are using the same for that.
 
 Step 1: Get Your Google Cloud/Gemini API Key
 
@@ -47,15 +57,30 @@ Step 1: Get Your Google Cloud/Gemini API Key
 
     Click the ENABLE button.
 
-    The Credit Card Step: If it prompts you to enable billing by adding a credit card, you will need to do so. Don't panic! This is primarily for identity verification and for if you go way over the free limits. The bot we built has a safety limiter so you will not be charged.
+    The Credit Card Step: If it prompts you to enable billing by adding a credit card, you will need to do so. 
+    Don't panic! This is primarily for identity verification and for if you go way over the free limits. 
+    The bot we built has a safety limiter so you will not be charged.
 
-Step 2: Set Up Global Variables in Streamer.bot
+ Step 2: Download & Place the Configuration Files
+ 
+       This bot runs on external .json files. This makes it easy to customize without editing code.
 
-(This is the bot's "memory")
+        Create a new folder in inside your main Streamer.bot installation directory and title it: MyBotFiles
+        
+        Download the two essential .json files: 
+        
+        translation_config.json (Contains all language, tone, and replacement maps)
+
+        translation_templates.json (Contains all bot response messages)
+
+        Create a new file with the title and extenstion: translation_user_profiles.json 
+        (This will store your viewers' settings and will be empty for now)
+
+Step 3: Set Up Global Variables in Streamer.bot
 
     In Streamer.bot, go to Variables and right click to add a new global variable.
 
-    Add the API Key:
+  Add the API Key:
 
         Right-click, Add.
 
@@ -65,16 +90,32 @@ Step 2: Set Up Global Variables in Streamer.bot
 
         Click OK.
 
-    Add the Slur Filter Blocklist (If you don't want to block any words then skip this step entirely):
+  Add the Slur Filter Blocklist (If you don't want to block any words then skip this step entirely):
 
         Right-click, Add.
 
         Name: translateBlocklist
 
-        Value: Enter a comma-separated list of words to block (e.g., word1,word2,word3). You can find public lists on GitHub by searching "streamer blocklist". 
+        Value: Enter a comma-separated list of words to block (e.g., word1,word2,word3). 
+        You can find public lists on GitHub by searching "streamer blocklist". 
+        
         Click OK.
 
-    Add the Daily Counter:
+   TranslateEnabled:
+
+        Type: Boolean
+
+        Value: Set to true
+
+        Click OK.
+
+  translateUserBlocklist
+
+       Type: String
+
+       Value: (Optional) A comma-separated list of usernames to block from using the commands (e.g., user1,user2).
+    
+  Add the Daily Counter:
 
         Right-click, Add.
 
@@ -84,7 +125,7 @@ Step 2: Set Up Global Variables in Streamer.bot
 
         Click OK.
 
-    Add the Rate Limit Tracker:
+  Add the Rate Limit Tracker:
 
         Right-click, Add.
 
@@ -94,259 +135,175 @@ Step 2: Set Up Global Variables in Streamer.bot
 
         Click OK.
 
-Step 3: Create the Main Translator Action
 
-    In Streamer.bot, go to the Actions tab.
+  Step 4: Import the Commands:
 
-    Right-click, Add. Name it Translate Chat (Gemini YT). Click OK.
-
-    In the Sub-Actions pane on the right, right-click and choose C# -> Execute C# Code.
-
-    DELETE all the default code in the pop-up window.
-
-    PASTE IN the complete, commented C# code you have. (You may alter it however you want. There are comments that let you know what is safe to change)
-
-    Add References:
-
-        At the bottom of the C# window, click Find Refs.
-
-    Click the Compile button at the bottom. It MUST say "Compiled successfully!".
-
-    Click OK.
-
-Step 4: Create the YouTube Commands
-
-    Go to Commands.
-
-    Right-click, Add.
-
-    Command: !translate. (You can start a new line and add as many or as little as you want)
-
-    Location: Make sure this is set to Start of message.
-
-    Check the YouTube Message box under sources and unclick Twitch Message checkbox.
-
-    Click OK.
-
-    Repeat these steps to add any other command names you want (e.g., !traduzir, !honyaku).
-
-Step 5: Create the !languages Helper Command
-
-(Optional but highly recommended)
-
-    Create the Command:
-
-        Go back to Commands.
-
-        Add a new command named !languages.
-
-        Command: !translate. (You can start a new line and add as many or as little as you want)
-
-        Location: Make sure this is set to Start of message.
-
-        Check the YouTube Message box under sources and unclick Twitch Message checkbox.
-
-        Click OK.
-
+  Copy the Import String: 
     
-    Create the Action:
+    Copy the giant block of text from the translation bot file.
 
-        Go to the Actions tab, Add a new action. Name it Explain Languages or something like that.
-
-        In Sub-Actions, add Core -> C# -> Excute C# code.
-
-        Delete all code in the pop up window.
-
-        Paste the explainlanguages.cs code.
-
-        Click OK.
-
-        In Triggers, Core -> Commands -> Commands triggered.
-
-        In the dropdown choose the command you just created.
-
-        Click OK.
-
+  Import into Streamer.bot 
     
-Step 6: Test It!
+    In Streamer.bot, go to the top tabs, and choose Import. Paste the text there and click 'Import'.
 
+    This will automatically create all the necessary Actions and Commands for you.
+  
+  If you want to make it for one platform instead of both, simply disable every command/action for the one you don't want. 
+    
 Note: As this is an AI there are bound to be mistakes and odd things of the sort at times.
 
 
 -----------------------------
 
-# Programa de Comando de Tradução com IA para o YouTube
+# Translation Bot
 
-Recursos do Bot:
+Funcionalidades do Bot:
 
-    Traduz mensagens de outros idiomas para o inglês por padrão.
+     Traduz mensagens de outros idiomas para o inglês por padrão.
 
-    Traduz mensagens do inglês para o Português do Brasil por padrão.
+     Traduz mensagens do inglês para o português do Brasil por padrão.
 
-    Pode traduzir para outros idiomas com um comando (ex: !translate es hello).
+     Pode traduzir para outros idiomas por comando (ex: !translate es olá).
 
-    Inclui idiomas divertidos de "brincadeira", como Simlish, Código Morse e mais.
+     Inclui "idiomas" divertidos de brincadeira como Simlish, Código Morse e mais.
 
-    Possui um filtro de entrada manual para palavras que você deseja bloquear.
+     Possui um filtro de entrada manual para palavras que você deseja bloquear.
+    
+     Inclui um limitador de requisições para evitar que você seja cobrado pelo uso da API.
 
-    Inclui um limitador de uso para evitar que você seja cobrado pelo uso da API.
+     Lida de forma inteligente com idiomas com gênero usando marcadores opcionais como %ela/dela% e *NomePróprio*.
+    
+     Consegue lidar com múltiplos tons em uma única frase (ex: &sarcástico& ... &sério& ...).
 
-    Lida inteligentemente com idiomas que usam gênero, usando marcadores opcionais %she/her% e *ProperNoun*.
+     Divide automaticamente mensagens longas que, de outra forma, falhariam ao serem enviadas.
 
-    Pode lidar com múltiplos tons em uma única frase (ex: &sarcástico& ... &sério& ...).
+     Totalmente Configurável: Quase todas as configurações, idiomas e respostas do bot são controladas por arquivos .json fáceis de editar.
+    Não é preciso tocar no código C# para fazer alterações!
 
-    Divide automaticamente mensagens longas que, de outra forma, não seriam enviadas.
+     Perfis de Usuário: Os espectadores podem definir seu próprio idioma padrão e a personalidade do bot usando o comando !sl.
 
-Guia para o meu Bot Tradutor de IA do YouTube
+     Multiplataforma: Código separado e otimizado é fornecido tanto para a Twitch quanto para o YouTube.
 
-    Baixe o arquivo YTtranslationcommand.cs nesta página do GitHub.
+     Direciona os usuários para um guia de ajuda completo através do comando !langhelp.
 
-    Baixe o Streamer.bot: https://streamer.bot/
+Guia do Translation Bot:
 
     No Streamer.bot, vá para Platforms -> YouTube -> Accounts.
-
-    Faça login com a Conta Google que é Dona (Owner) ou Moderadora (Moderator) do seu canal do YouTube.
-
-    Quando o Google pedir permissões, MARQUE TODAS AS CAIXAS. Você precisa conceder permissão para "gerenciar sua conta do YouTube" e enviar mensagens.
-
-Passo 1: Obtenha sua Chave de API do Google Cloud/Gemini
-
+    
+    Faça login com a conta do Google que é Proprietária (Owner) ou Moderadora do seu canal do YouTube.
+    
+    Quando o Google solicitar permissões, MARQUE TODAS AS CAIXAS.
+    Você deve conceder permissão para "gerenciar sua conta do YouTube" e enviar mensagens.
+    
+    Faça praticamente o mesmo para a Twitch, se for usar o bot lá também.
+  
+  Passo 1: Obtenha sua Chave de API do Google Cloud/Gemini
+    
     Acesse o Google AI Studio: aistudio.google.com e faça login.
-
-    Clique em "Get API key" à esquerda, e depois em "Create API key in new project".
-
-    Copie sua nova chave de API e cole-a no Bloco de Notas (Notepad) por enquanto.
-
+    
+    Clique em "Get API key" (Obter chave de API) à esquerda, e depois em "Create API key in new project" (Criar chave de API em novo projeto).
+    
+    Copie sua nova chave de API e cole-a no Bloco de Notas por enquanto.
+    
     Agora, precisamos ativar a API no console da nuvem. Acesse: console.cloud.google.com.
+    
+    Certifique-se de que o projeto selecionado no topo corresponde ao que você acabou de criar.
+    
+    Na barra de pesquisa, digite `Generative Language API` e clique nela.
+    
+    Clique no botão ATIVAR (ENABLE).
+    
+    **O Passo do Cartão de Crédito:** Se o sistema pedir para você ativar o faturamento adicionando um cartão de crédito, será necessário fazê-lo.
+    Não se assuste! Isso é principalmente para verificação de identidade e para casos em que você ultrapasse muito os limites gratuitos.
+    O bot que criamos possui um limitador de segurança para que você não seja cobrado.
 
-    Verifique se o projeto selecionado no topo da página é o mesmo que você acabou de criar.
+Passo 2: Baixe e Posicione os Arquivos de Configuração
 
-    Na barra de pesquisa, digite Generative Language API e clique nela.
+    Este bot funciona com base em arquivos .json externos. Isso facilita a personalização sem precisar editar o código.
+    
+    Crie uma nova pasta dentro do diretório principal de instalação do Streamer.bot e nomeie-a: `MyBotFiles`
+    
+    Baixe os dois arquivos .json essenciais:
+    
+    `translation_config.json` (Contém todos os mapas de idioma, tom e substituição)
+    
+    `translation_templates.json` (Contém todas as mensagens de resposta do bot)
+    
+    Crie um novo arquivo com o nome e a extensão: `translation_user_profiles.json`
+    (Este arquivo armazenará as configurações dos seus espectadores e estará vazio por enquanto)
 
-    Clique no botão ENABLE (ATIVAR).
+Passo 3: Configure as Variáveis Globais no Streamer.bot
 
-    O Passo do Cartão de Crédito: Se for solicitado que você ative o faturamento adicionando um cartão de crédito, você precisará fazer isso. Fique tranquilo! Isso é principalmente para verificação de identidade e para casos em que você ultrapasse muito os limites gratuitos. O bot que criamos tem um limitador de segurança para que você não seja cobrado.
-
-Passo 2: Configure as Variáveis Globais no Streamer.bot
-
-(Esta é a "memória" do bot)
-
-    No Streamer.bot, vá para a aba Variables e clique com o botão direito para adicionar uma nova variável global.
-
-    Adicione a Chave de API:
-
-        Clique com o botão direito, Add.
-
-        Name: geminiApiKey (sensível a maiúsculas e minúsculas!)
-
-        Value: Cole sua chave de API aqui.
-
-        Clique em OK.
-
-    Adicione a Blocklist (Lista de Bloqueio) do Filtro de Ofensas (Se você não quiser bloquear nenhuma palavra, pule esta etapa inteiramente):
-
-        Clique com o botão direito, Add.
-
-        Name: translateBlocklist
-
-        Value: Insira uma lista de palavras separadas por vírgula para bloquear (ex: palavra1,palavra2,palavra3). Você pode encontrar listas públicas no GitHub pesquisando por "streamer blocklist".
-
-        Clique em OK.
-
-    Adicione o Contador Diário:
-
-        Clique com o botão direito, Add.
-
-        Name: geminiRequestCountDaily
-
-        Value: 0
-
-        Clique em OK.
-
-    Adicione o Rastreador de Limite de Uso:
-
-        Clique com o botão direito, Add.
-
-        Name: geminiRequestTimestamps
-
-        Value: 0
-
-        Clique em OK.
-
-Passo 3: Crie a Ação Principal do Tradutor
-
-    No Streamer.bot, vá para a aba Actions.
-
-    Clique com o botão direito, Add. Nomeie como Translate Chat (Gemini YT). Clique em OK.
-
-    No painel de Sub-Actions à direita, clique com o botão direito e escolha C# -> Execute C# Code.
-
-    APAGUE todo o código padrão na janela que aparecer.
-
-    COLE o código C# completo e comentado que você tem. (Você pode alterá-lo como quiser. Existem comentários que informam o que é seguro alterar).
-
-    Adicione as Referências:
-
-        Na parte inferior da janela de C#, clique na Find Refs.
-
-    Clique no botão Compile na parte inferior. É OBRIGATÓRIO que apareça a mensagem "Compiled successfully!".
-
+    No Streamer.bot, vá para a aba "Variables" e clique com o botão direito para adicionar uma nova variável global.
+    
+  Adicione a Chave de API:
+    
+    Clique com o botão direito, Add (Adicionar).
+    
+    Name (Nome): `geminiApiKey` (sensível a maiúsculas e minúsculas!)
+    
+    Value (Valor): Cole sua chave de API aqui.
+    
     Clique em OK.
 
-Passo 4: Crie os Comandos do YouTube
-
-    Vá para Commands.
-
-    Clique com o botão direito, Add.
-
-    Command: !translate. (Você pode iniciar uma nova linha e adicionar quantos comandos quiser).
-
-    Location: Verifique se está definido como Start of message.
-
-    Marque a caixa YouTube Message em "sources" e desmarque a caixa Twitch Message.
-
+    Adicione a Lista de Bloqueio de Palavras Ofensivas (Se você não quiser bloquear nenhuma palavra, pule este passo completamente):
+    
+    Clique com o botão direito, Add (Adicionar).
+    
+    Name (Nome): `translateBlocklist`
+    
+    Value (Valor): Insira uma lista de palavras a serem bloqueadas, separadas por vírgula (ex: palavra1,palavra2,palavra3).
+    Você pode encontrar listas públicas no GitHub pesquisando por "streamer blocklist".
+    
     Clique em OK.
 
-    Repita esses passos para adicionar quaisquer outros nomes de comando que desejar (ex: !traduzir, !honyaku).
+TranslateEnabled:
 
-Passo 5: Crie o Comando de Ajuda !languages
+    Type (Tipo): `Boolean`
+    
+    Value (Valor): Defina como `true`
+    
+    Clique em OK.
+    
+    translateUserBlocklist:
+    
+    Type (Tipo): `String`
+    
+    Value (Valor): (Opcional) Uma lista de nomes de usuário, separados por vírgula, para bloquear o uso dos comandos (ex: usuario1,usuario2).
 
-(Opcional, mas altamente recomendado)
+Adicione o Contador Diário:
 
-    Crie o Comando:
+Clique com o botão direito, Add (Adicionar).
 
-        Volte para Commands.
+    Name (Nome): `geminiRequestCountDaily`
+    
+    Value (Valor): `0`
+    
+    Clique em OK.
+    
+    Adicione o Rastreador do Limite de Requisições:
 
-        Adicione um novo comando chamado !languages.
+Clique com o botão direito, Add (Adicionar).
 
-        Command: !languages. (Este comando é o que os usuários irão digitar).
+    Name (Nome): `geminiRequestTimestamps`
+    
+    Value (Valor): `0`
+    
+    Clique em OK.
 
-        Action: Selecione a ação que você vai criar no próximo passo (ex: Explain Languages).
+Passo 4: Importe os Comandos:
 
-        Location: Verifique se está definido como Start of message.
+    Copie o Código de Importação:
+    
+    Copie o bloco de texto gigante do arquivo do bot de tradução.
+    
+    Importe para o Streamer.bot
+    
+    No Streamer.bot, vá para as abas superiores e escolha "Import" (Importar). Cole o texto lá e clique em "Import".
+    
+    Isso criará automaticamente todas as Ações (Actions) e Comandos (Commands) necessários para você.
+    
+    
+Se você quiser usá-lo em apenas uma plataforma em vez de ambas, simplesmente desative todos os comandos/ações da plataforma que você não quer usar.   
 
-        Marque a caixa YouTube Message em "sources" e desmarque a caixa Twitch Message.
-
-        Clique em OK.
-
-    Crie a Ação:
-
-        Vá para a aba Actions, adicione uma nova ação. Nomeie como Explain Languages ou algo similar.
-
-        Em Sub-Actions, adicione Core -> C# -> Execute C# Code.
-
-        APAGUE todo o código na janela que aparecer.
-
-        COLE o código explainlanguages.cs.
-
-        Clique em OK.
-
-        Em Triggers (Gatilhos), adicione Core -> Commands -> Command Triggered.
-
-        Na lista suspensa, escolha o comando que você acabou de criar (!languages).
-
-        Clique em OK.
-
-Passo 6: Teste!
-
-Observação: Como esta é uma IA, é natural que ocorram erros e coisas estranhas de vez em quando.
+Observação: Como esta é uma IA, é provável que ocorram erros e coisas estranhas do tipo de vez em quando.
