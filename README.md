@@ -65,16 +65,15 @@ Step 1: Get Your Google Cloud/Gemini API Key
  
        This bot runs on external .json files. This makes it easy to customize without editing code.
 
-        Create a new folder in inside your main Streamer.bot installation directory and title it: MyBotFiles
+        Download the MyBotFiles folder and unzip it. 
         
-        Download the two essential .json files: 
+        It contains three essential .json files: 
         
         translation_config.json (Contains all language, tone, and replacement maps)
 
         translation_templates.json (Contains all bot response messages)
 
-        Create a new file with the title and extenstion: translation_user_profiles.json 
-        (This will store your viewers' settings and will be empty for now)
+        translation_user_profiles.json (This will store your viewers' settings and will be empty)
 
 Step 3: Set Up Global Variables in Streamer.bot
 
@@ -138,11 +137,11 @@ Step 3: Set Up Global Variables in Streamer.bot
 
   Step 4: Import the Commands:
 
-  Copy the Import String: 
+   Copy the Import String: 
     
     Copy the giant block of text from the translation bot file.
 
-  Import into Streamer.bot 
+    Import into Streamer.bot 
     
     In Streamer.bot, go to the top tabs, and choose Import. Paste the text there and click 'Import'.
 
@@ -220,17 +219,16 @@ Guia do Translation Bot:
 Passo 2: Baixe e Posicione os Arquivos de Configuração
 
     Este bot funciona com base em arquivos .json externos. Isso facilita a personalização sem precisar editar o código.
-    
-    Crie uma nova pasta dentro do diretório principal de instalação do Streamer.bot e nomeie-a: `MyBotFiles`
-    
-    Baixe os dois arquivos .json essenciais:
-    
+
+    Baixe a pasta `MyBotFiles` e descompacte-a.
+
+    Ela contém três arquivos .json essenciais:
+
     `translation_config.json` (Contém todos os mapas de idioma, tom e substituição)
-    
+
     `translation_templates.json` (Contém todas as mensagens de resposta do bot)
-    
-    Crie um novo arquivo com o nome e a extensão: `translation_user_profiles.json`
-    (Este arquivo armazenará as configurações dos seus espectadores e estará vazio por enquanto)
+
+    `translation_user_profiles.json` (Este arquivo armazenará as configurações dos seus espectadores e estará vazio)
 
 Passo 3: Configure as Variáveis Globais no Streamer.bot
 
@@ -273,7 +271,7 @@ TranslateEnabled:
 
 Adicione o Contador Diário:
 
-Clique com o botão direito, Add (Adicionar).
+  Clique com o botão direito, Add (Adicionar).
 
     Name (Nome): `geminiRequestCountDaily`
     
@@ -283,7 +281,7 @@ Clique com o botão direito, Add (Adicionar).
     
     Adicione o Rastreador do Limite de Requisições:
 
-Clique com o botão direito, Add (Adicionar).
+ Clique com o botão direito, Add (Adicionar).
 
     Name (Nome): `geminiRequestTimestamps`
     
